@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "drf-project2"
+version = "0.1.0"
+description = ""
+authors = ["Dm1triiSmirnov <smirnov0719@gmail.com>"]
+readme = "README.md"
+packages = [{include = "drf_project2"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+django = "^4.1.7"
+djangorestframework = "^3.14.0"
+psycopg2 = "^2.9.5"
+
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^3.2.1"
+black = "^23.1.0"
+flake8 = "^6.0.0"
+isort = "^5.12.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
