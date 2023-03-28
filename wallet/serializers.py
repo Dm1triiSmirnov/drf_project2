@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from wallet.models import Transaction, Wallet
+from wallet.models import Wallet
 
 
 class WalletSerializer(serializers.ModelSerializer):
@@ -15,18 +15,4 @@ class WalletSerializer(serializers.ModelSerializer):
             "balance",
             "created_on",
             "modified_on",
-        )
-
-
-class TransactionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Transaction
-        fields = (
-            "id",
-            "sender",
-            "receiver",
-            "transfer_amount",
-            "commission",
-            "status",
-            "timestamp",
         )

@@ -14,20 +14,10 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-
-from wallet.views import TransactionViewSet, WalletViewSet
-
-# from wallet.views import WalletAPIView
-
+from django.urls import include, path
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("wallets/", WalletViewSet.as_view({"get": "list"})),
-    path("wallets/<str:name>", TransactionViewSet.as_view({"get": "list"})),
-    path("wallets/transactions/", TransactionViewSet.as_view({"get": "list"})),
-    path(
-        "wallets/transactions/<str:name>",
-        TransactionViewSet.as_view({"get": "list"}),  # noqa E501
-    ),
+    path("wallets/transactions/", include("transaction.urls")),
+    path("wallets/", include("wallet.urls")),
 ]

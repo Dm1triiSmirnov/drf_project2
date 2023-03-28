@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "wallet.apps.WalletConfig",
+    "transaction.apps.TransactionConfig",
 ]
 
 MIDDLEWARE = [

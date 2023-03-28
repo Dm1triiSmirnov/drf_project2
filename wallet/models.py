@@ -5,7 +5,6 @@ from django.db import models
 
 WALLET_TYPE = [("Visa", "visa"), ("Mastercard", "mastercard")]
 CURRENCY = [("USD", "dollar"), ("EUR", "euro"), ("RUB", "ruble")]
-STATUS = [("PAID", "paid"), ("FAILED", "failed")]
 
 
 class Wallet(models.Model):
@@ -35,22 +34,3 @@ class Wallet(models.Model):
 
     class Meta:
         ordering = ["user"]
-
-
-class Transaction(models.Model):
-    sender = models.ForeignKey(
-        "Wallet",
-        on_delete=models.CASCADE,
-        related_name="sender",
-        to_field="name",  # noqa E501
-    )
-    receiver = models.ForeignKey(
-        "Wallet",
-        on_delete=models.CASCADE,
-        related_name="receiver",
-        to_field="name",  # noqa E501
-    )
-    transfer_amount = models.FloatField()
-    commission = models.FloatField()
-    status = models.CharField(choices=STATUS, max_length=100)
-    timestamp = models.DateTimeField(auto_now_add=True)
