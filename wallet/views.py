@@ -12,8 +12,3 @@ class WalletViewSet(viewsets.ModelViewSet):
 class TransactionViewSet(viewsets.ModelViewSet):
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
-
-
-# class WalletAPIView(generics.ListAPIView):
-#     queryset = Wallet.objects.all()
-#     serializer_class = WalletSerializer

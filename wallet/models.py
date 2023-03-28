@@ -8,11 +8,6 @@ CURRENCY = [("USD", "dollar"), ("EUR", "euro"), ("RUB", "ruble")]
 STATUS = [("PAID", "paid"), ("FAILED", "failed")]
 
 
-class User(models.Model):
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-
-
 class Wallet(models.Model):
     def generate_wallet_name():
         """Function which generate wallet name from unique
@@ -32,7 +27,9 @@ class Wallet(models.Model):
     type = models.CharField(choices=WALLET_TYPE, max_length=100)
     currency = models.CharField(choices=CURRENCY, max_length=3)
     balance = models.DecimalField(max_digits=200, decimal_places=2)
-    user = models.ForeignKey("User", on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        "auth.User", related_name="owner", on_delete=models.CASCADE
+    )
     created_on = models.DateTimeField(auto_now_add=True)
     modified_on = models.DateTimeField(auto_now=True)
 
@@ -41,8 +38,18 @@ class Wallet(models.Model):
 
 
 class Transaction(models.Model):
-    sender = models.CharField(max_length=8)
-    receiver = models.CharField(max_length=8)
+    sender = models.ForeignKey(
+        "Wallet",
+        on_delete=models.CASCADE,
+        related_name="sender",
+        to_field="name",  # noqa E501
+    )
+    receiver = models.ForeignKey(
+        "Wallet",
+        on_delete=models.CASCADE,
+        related_name="receiver",
+        to_field="name",  # noqa E501
+    )
     transfer_amount = models.FloatField()
     commission = models.FloatField()
     status = models.CharField(choices=STATUS, max_length=100)
