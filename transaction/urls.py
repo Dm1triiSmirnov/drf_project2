@@ -1,10 +1,12 @@
 from django.urls import path
 
-from transaction.views import TransactionViewSet
+from transaction.views import TransactionListCreateViewSet, TransactionRetrieveDestroyViewSet
+
 
 urlpatterns = [
-    path("", TransactionViewSet.as_view({"get": "list"})),
-    # path(
-    #     "<str:name>/",
-    #     TransactionViewSet.as_view({"get": "list"}),
+    path("", TransactionListCreateViewSet.as_view({"get": "list",
+                                                   "post": "create"})),
+    path("<int:pk>/",
+         TransactionRetrieveDestroyViewSet.as_view({"get": "retrieve",
+                                                   "delete": "destroy"})),
 ]

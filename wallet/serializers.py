@@ -27,7 +27,6 @@ class WalletSerializer(serializers.ModelSerializer):
             if RUB - balance=100.00
         """
 
-        print(validated_data)
         if Wallet.objects.filter(user__exact=validated_data.get("user")).count() >= 5:
             raise Exception("User can't create more than 5 wallets")
         if validated_data["currency"] in ["USD", "EUR"]:
