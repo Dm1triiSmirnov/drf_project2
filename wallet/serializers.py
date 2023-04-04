@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
-from wallet.models import Wallet
+from wallet.models import (BANK_BONUS_RUB, BANK_BONUS_USD_EUR, MAX_WALLETS,
+                           Wallet)
 
 
 class WalletSerializer(serializers.ModelSerializer):
@@ -27,11 +28,16 @@ class WalletSerializer(serializers.ModelSerializer):
             if RUB - balance=100.00
         """
 
-        if Wallet.objects.filter(user__exact=validated_data.get("user")).count() >= 5:
+        if (
+            Wallet.objects.filter(
+                user__exact=validated_data.get("user")
+            ).count()  # noqa E501
+            >= MAX_WALLETS
+        ):
             raise Exception("User can't create more than 5 wallets")
         if validated_data["currency"] in ["USD", "EUR"]:
-            validated_data["balance"] += 3
+            validated_data["balance"] += BANK_BONUS_RUB
         elif validated_data["currency"] == "RUB":
-            validated_data["balance"] += 100
+            validated_data["balance"] += BANK_BONUS_USD_EUR
 
         return Wallet.objects.create(**validated_data)
