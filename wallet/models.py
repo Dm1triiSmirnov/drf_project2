@@ -5,6 +5,9 @@ from django.db import models
 
 WALLET_TYPE = [("Visa", "visa"), ("Mastercard", "mastercard")]
 CURRENCY = [("USD", "dollar"), ("EUR", "euro"), ("RUB", "ruble")]
+MAX_WALLETS = 5
+BANK_BONUS_USD_EUR = 3.00
+BANK_BONUS_RUB = 100.00
 
 
 class Wallet(models.Model):
