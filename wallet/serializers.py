@@ -36,8 +36,8 @@ class WalletSerializer(serializers.ModelSerializer):
         ):
             raise Exception("User can't create more than 5 wallets")
         if validated_data["currency"] in ["USD", "EUR"]:
-            validated_data["balance"] += BANK_BONUS_RUB
-        elif validated_data["currency"] == "RUB":
             validated_data["balance"] += BANK_BONUS_USD_EUR
+        elif validated_data["currency"] == "RUB":
+            validated_data["balance"] += BANK_BONUS_RUB
 
         return Wallet.objects.create(**validated_data)

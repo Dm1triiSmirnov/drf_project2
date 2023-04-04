@@ -1,7 +1,7 @@
 from django.urls import path
 
 from transaction.views import (TransactionListCreateViewSet,
-                               TransactionListViewSet,
+                               TransactionListAPIView,
                                TransactionRetrieveDestroyViewSet)
 
 urlpatterns = [
@@ -14,7 +14,7 @@ urlpatterns = [
         ),
     ),
     path(
-        "<str:sender>/<str:receiver>/",
-        TransactionListViewSet.as_view({"get": "list"})
+        "<str:pk>/",
+        TransactionListAPIView.as_view()
     ),
 ]
