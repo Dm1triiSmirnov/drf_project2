@@ -36,6 +36,7 @@ class TransactionRetrieveDestroyViewSet(
 
 
 class TransactionListAPIView(ListAPIView):
+    queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
 
     def get(self, request, *args, **kwargs) -> Response:
