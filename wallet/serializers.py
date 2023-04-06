@@ -6,6 +6,7 @@ from wallet.models import (BANK_BONUS_RUB, BANK_BONUS_USD_EUR, MAX_WALLETS,
 
 class WalletSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(read_only=True)
+    currency = serializers.CharField(default="EUR")
 
     class Meta:
         model = Wallet
@@ -37,6 +38,7 @@ class WalletSerializer(serializers.ModelSerializer):
             >= MAX_WALLETS
         ):
             raise Exception("User can't create more than 5 wallets")
+
         if validated_data["currency"] in ["USD", "EUR"]:
             validated_data["balance"] += BANK_BONUS_USD_EUR
         elif validated_data["currency"] == "RUB":
