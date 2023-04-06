@@ -1,5 +1,6 @@
-from rest_framework import mixins, status, viewsets
+from rest_framework import mixins, status, viewsets, permissions
 from rest_framework.response import Response
+from django.db.models import Q
 
 from wallet.models import Wallet
 from wallet.serializers import WalletSerializer
@@ -10,6 +11,7 @@ class WalletsListCreateViewSet(
 ):
     queryset = Wallet.objects.all()
     serializer_class = WalletSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def list(self, request, *args, **kwargs) -> Response:
         """Get all wallets for current user"""
@@ -35,3 +37,42 @@ class WalletsRetrieveDestroyViewSet(
     queryset = Wallet.objects.all()
     serializer_class = WalletSerializer
     lookup_field = "name"
+    permission_classes = [permissions.IsAuthenticated]
+
+    def destroy(self, request, *args, **kwargs) -> Response:
+        """
+        Delete wallet.
+        Performs check if the is not the owner of the wallet,
+        then returns an error.
+        """
+
+        queryset = Wallet.objects.filter(
+            Q(user=request.user) & Q(name=self.kwargs.get("name"))
+              )
+
+        if not queryset:
+            return Response("User can delete only own wallets",
+                            status=status.HTTP_403_FORBIDDEN)
+
+        wallet = self.get_object()
+        wallet.delete()
+
+        return Response({"Message": "Wallet has been deleted"})
+
+    def retrieve(self, request, *args, **kwargs) -> Response:
+        """Retrieve wallet details.
+        Perform check if user is not owner of the wallet,
+        then return error.
+        """
+
+        queryset = Wallet.objects.filter(
+            Q(user=request.user) & Q(name=self.kwargs.get("name"))
+              )
+
+        if not queryset:
+            return Response("User can view only own wallets",
+                            status=status.HTTP_403_FORBIDDEN)
+
+        serializer = WalletSerializer(queryset, many=True)
+
+        return Response(serializer.data)
