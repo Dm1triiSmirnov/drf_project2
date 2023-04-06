@@ -26,3 +26,7 @@ class Transaction(models.Model):
         choices=STATUS, max_length=100, default="PAID", editable=False
     )
     timestamp = models.DateTimeField(auto_now_add=True, editable=False)
+
+    def __str__(self):
+        return f"Transaction ID: {self.id} From: {self.sender.name} To: {self.receiver.name}"
+
