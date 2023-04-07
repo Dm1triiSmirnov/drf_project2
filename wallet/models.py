@@ -11,7 +11,7 @@ BANK_BONUS_RUB = 100
 
 
 class Wallet(models.Model):
-    def generate_wallet_name():
+    def generate_wallet_name() -> str:
         """Function which generate wallet name from unique
         random 8 symbols of latin alphabet and digits."""
 
@@ -26,8 +26,8 @@ class Wallet(models.Model):
     name = models.CharField(
         max_length=8, unique=True, default=generate_wallet_name, editable=False
     )
-    type = models.CharField(choices=WALLET_TYPE, max_length=100)
-    currency = models.CharField(choices=CURRENCY, max_length=3)
+    type = models.CharField(choices=WALLET_TYPE, max_length=100, default="Visa")
+    currency = models.CharField(choices=CURRENCY, max_length=3, default="EUR")
     balance = models.DecimalField(max_digits=200, decimal_places=2)
     user = models.ForeignKey(
         "auth.User", related_name="owner", on_delete=models.CASCADE
@@ -37,3 +37,6 @@ class Wallet(models.Model):
 
     class Meta:
         ordering = ["user"]
+
+    def __str__(self):
+        return self.name
