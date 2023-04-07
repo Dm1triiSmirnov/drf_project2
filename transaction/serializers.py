@@ -32,6 +32,21 @@ class TransactionSerializer(serializers.ModelSerializer):
             )
         return data
 
+    # def validate_transfer_amount(self, validated_data):
+    #     """
+    #     Checks the user's balance.
+    #     Returns an error if there are not enough funds
+    #     """
+    #
+    #     sender_wallet = self.get_sender_wallet(validated_data)
+    #     sender_wallet.is_valid()
+    #     if not sender_wallet.filter(
+    #         balance__gte=Decimal(
+    #             self.context["request"].data["transfer_amount"]
+    #         )
+    #     ).exists():
+    #         raise serializers.ValidationError("Not enough balance")
+
     def create(self, validated_data):
         """
         Calculate the commission based on whether

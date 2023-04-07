@@ -1,4 +1,4 @@
-from rest_framework import mixins, viewsets, status
+from rest_framework import mixins, viewsets, status, permissions
 from rest_framework.response import Response
 from rest_framework.generics import ListAPIView
 from django.db.models import Q
@@ -12,6 +12,7 @@ class TransactionListCreateViewSet(
 ):
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def list(self, request, *args, **kwargs) -> Response:
         """Get all transactions for current user"""
@@ -33,11 +34,13 @@ class TransactionRetrieveDestroyViewSet(
 ):
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
 
 class TransactionListAPIView(ListAPIView):
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs) -> Response:
         """Get all transactions where <wallet_name> was sender or receiver"""
