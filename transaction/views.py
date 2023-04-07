@@ -1,7 +1,7 @@
-from rest_framework import mixins, viewsets, status, permissions
-from rest_framework.response import Response
-from rest_framework.generics import ListAPIView
 from django.db.models import Q
+from rest_framework import mixins, permissions, status, viewsets
+from rest_framework.generics import ListAPIView
+from rest_framework.response import Response
 
 from transaction.models import Transaction
 from transaction.serializers import TransactionSerializer
@@ -23,8 +23,10 @@ class TransactionListCreateViewSet(
         serializer = TransactionSerializer(queryset, many=True)
         if queryset:
             return Response(serializer.data)
-        return Response("No transactions for current user",
-                        status=status.HTTP_404_NOT_FOUND)
+        return Response(
+            "No transactions for current user",
+            status=status.HTTP_404_NOT_FOUND
+        )
 
 
 class TransactionRetrieveDestroyViewSet(
@@ -47,8 +49,8 @@ class TransactionListAPIView(ListAPIView):
 
         queryset = Transaction.objects.filter(
             (
-                    Q(sender__name=self.kwargs.get("pk"))
-                    | Q(receiver__name=self.kwargs.get("pk"))
+                Q(sender__name=self.kwargs.get("pk"))
+                | Q(receiver__name=self.kwargs.get("pk"))
             )
             & (Q(sender__user=request.user) | Q(receiver__user=request.user))
         )

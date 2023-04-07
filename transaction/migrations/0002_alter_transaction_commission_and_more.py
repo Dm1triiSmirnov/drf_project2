@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="transaction",
             name="commission",
-            field=models.DecimalField(decimal_places=2, default=0, max_digits=12),
+            field=models.DecimalField(decimal_places=2, default=0, max_digits=12),  # noqa E501
         ),
         migrations.AlterField(
             model_name="transaction",

@@ -29,4 +29,3 @@ class Transaction(models.Model):
 
     def __str__(self):
         return f"Transaction ID: {self.id} From: {self.sender.name} To: {self.receiver.name}"
-
