@@ -29,14 +29,30 @@ class TransactionListCreateViewSet(
         )
 
 
-class TransactionRetrieveDestroyViewSet(
+class TransactionRetrieveViewSet(
     mixins.RetrieveModelMixin,
-    mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    def retrieve(self, request, *args, **kwargs) -> Response:
+        """Retrieve transaction details.
+        Perform check if user is not owner of the transaction,
+        then return error.
+        """
+
+        queryset = Transaction.objects.filter(
+            (Q(sender__user=request.user) | Q(receiver__user=request.user)) &
+            Q(id=self.kwargs.get("pk"))
+        )
+        if not queryset:
+            return Response(
+                "User can view only own transactions", status=status.HTTP_403_FORBIDDEN
+            )
+        serializer = TransactionSerializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class TransactionListAPIView(ListAPIView):
