@@ -16,7 +16,16 @@ class Transaction(models.Model):
         related_name="receiver",
         to_field="name",  # noqa E501
     )
-    transfer_amount = models.FloatField()
-    commission = models.FloatField()
-    status = models.CharField(choices=STATUS, max_length=100)
-    timestamp = models.DateTimeField(auto_now_add=True)
+    transfer_amount = models.DecimalField(
+        max_digits=12, decimal_places=2, default=0
+    )  # noqa E501
+    commission = models.DecimalField(
+        max_digits=12, decimal_places=2, default=0, editable=False
+    )
+    status = models.CharField(
+        choices=STATUS, max_length=100, default="PAID", editable=False
+    )
+    timestamp = models.DateTimeField(auto_now_add=True, editable=False)
+
+    def __str__(self):
+        return f"Transaction ID: {self.id} From: {self.sender.name} To: {self.receiver.name}"
