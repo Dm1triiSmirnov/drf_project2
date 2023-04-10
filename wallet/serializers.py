@@ -5,7 +5,7 @@ from wallet.models import BANK_BONUS_RUB, BANK_BONUS_USD_EUR, Wallet
 
 class WalletSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(read_only=True)
-    currency = serializers.CharField(default="EUR")
+    balance = serializers.DecimalField(max_digits=200, decimal_places=2, default=0, read_only=True)
 
     class Meta:
         model = Wallet
@@ -28,10 +28,12 @@ class WalletSerializer(serializers.ModelSerializer):
         """
 
         if validated_data["currency"] in ["USD", "EUR"]:
-            validated_data["balance"] += BANK_BONUS_USD_EUR
+            balance = BANK_BONUS_USD_EUR
         elif validated_data["currency"] == "RUB":
-            validated_data["balance"] += BANK_BONUS_RUB
+            balance = BANK_BONUS_RUB
 
         user = self.context["request"].user
 
-        return Wallet.objects.create(**validated_data, user=user)
+        return Wallet.objects.create(**validated_data,
+                                     user=user,
+                                     balance=balance)
