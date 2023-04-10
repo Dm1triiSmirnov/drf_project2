@@ -44,12 +44,13 @@ class TransactionRetrieveViewSet(
         """
 
         queryset = Transaction.objects.filter(
-            (Q(sender__user=request.user) | Q(receiver__user=request.user)) &
-            Q(id=self.kwargs.get("pk"))
+            (Q(sender__user=request.user) | Q(receiver__user=request.user))
+            & Q(id=self.kwargs.get("pk"))
         )
         if not queryset:
             return Response(
-                "User can view only own transactions", status=status.HTTP_403_FORBIDDEN
+                "User can view only own transactions",
+                status=status.HTTP_403_FORBIDDEN
             )
         serializer = TransactionSerializer(queryset, many=True)
         return Response(serializer.data)
@@ -74,4 +75,5 @@ class TransactionListAPIView(ListAPIView):
         serializer = TransactionSerializer(queryset, many=True)
         if queryset:
             return Response(serializer.data)
-        return Response("No transactions", status=status.HTTP_404_NOT_FOUND)
+        return Response("No transactions",
+                        status=status.HTTP_404_NOT_FOUND)

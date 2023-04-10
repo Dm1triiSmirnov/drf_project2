@@ -50,17 +50,14 @@ class TransactionSerializer(serializers.ModelSerializer):
         Checks the user's balance.
         Returns an error if there are not enough funds
         """
-        sender_wallet = Wallet.objects.filter(
-            name=self.validated_data["sender"]
-        )
+        sender_wallet = Wallet.objects.filter(name=self.validated_data["sender"])
         if not sender_wallet.filter(
-            balance__gte=Decimal(
-                self.context["request"].data["transfer_amount"]
-            ) + commission
+            balance__gte=Decimal(self.context["request"].data["transfer_amount"])
+            + commission
         ).exists():
             raise serializers.ValidationError("Insufficient balance")
 
-    def create(self, validated_data):
+    def count_commission(self, sender, receiver, transfer_amount) -> Decimal:
         """
         Calculate the commission based on whether
         the sender and receiver wallets belong to the same user.
@@ -68,6 +65,26 @@ class TransactionSerializer(serializers.ModelSerializer):
         another wallet - no commission, and when he sends
         to wallet, related to another user - commission=10%
         """
+
+        if sender.user == receiver.user:
+            commission = 0
+        else:
+            commission = transfer_amount * Decimal("0.1")
+        return commission
+
+    def update_balance(self, sender,
+                       receiver,
+                       transfer_amount,
+                       commission) -> None:
+        """Update sender & receiver balance"""
+
+        sender.balance = F("balance") - (transfer_amount + commission)
+        sender.save()
+        receiver.balance = F("balance") + transfer_amount
+        receiver.save()
+
+    def create(self, validated_data):
+        """Create transaction"""
 
         transfer_amount = validated_data["transfer_amount"]
         sender = self.validated_data["sender"]
@@ -84,19 +101,8 @@ class TransactionSerializer(serializers.ModelSerializer):
             )
 
         self.check_sender_is_owner(sender)
-
-        if sender.user == receiver.user:
-            commission = 0
-        else:
-            commission = transfer_amount * Decimal("0.1")
-
+        commission = self.count_commission(sender, receiver, transfer_amount)
         self.validate_sender_balance(validated_data, commission)
+        self.update_balance(sender, receiver, transfer_amount, commission)
 
-        sender.balance = F("balance") - (transfer_amount + commission)
-        sender.save()
-        receiver.balance = F("balance") + transfer_amount
-        receiver.save()
-
-        validated_data["commission"] = commission
-
-        return Transaction.objects.create(**validated_data)
+        return Transaction.objects.create(**validated_data, commission=commission)
