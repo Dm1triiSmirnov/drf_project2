@@ -53,6 +53,7 @@ If the transaction is to the wallet of another user, then the commission is 10%
 <br>
 
 ### Data Base instructions:
+
 1. Connect to PostgreSQL: <br>
 sudo postgres psql <br>
  <br>
@@ -74,7 +75,7 @@ ALTER ROLE djangouser SET timezone TO 'UTC';<br>
 7. Grant permissions for user: <br>
 GRANT ALL PRIVILEGES ON DATABASE drf_project2 TO djangouser;<br>
  <br>
-8. Set environment variables in .env
+8. Set environment variables in .env <br>
 
 <br>
 
