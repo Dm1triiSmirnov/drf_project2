@@ -53,7 +53,6 @@ If the transaction is to the wallet of another user, then the commission is 10%
 <br>
 
 ### Data Base instructions:
-
 1. Connect to PostgreSQL: <br>
 sudo postgres psql <br>
  <br>
