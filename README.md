@@ -46,7 +46,7 @@ If the transaction is to the wallet of another user, then the commission is 10%
     </tr>
     <tr>
         <th>make mm</th>
-        <th>^4.1.7</th>
+        <th>Create migrations & apply them</th>
     </tr>
 </table>
 
